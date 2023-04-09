@@ -1,24 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import AddContact from "./components/AddContact";
+import { Container, Row, Col } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import ContactTable from "./components/ContactTable";
+import { useReducer, useState } from "react";
+import ContactDetailsModal from "./components/ContactDetailsModal";
+import { contactReducer, initialContactState } from "./utility/contactReducer";
+import ToastInfo from "./components/ToastInfo";
 
 function App() {
+  const [isShow, setIsShow] = useState(false);
+  const [toastShow, setToastShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [statusMsg, setStatusMsg] = useState("");
+  const [status, setStatus] = useState("success");
+  const [state, dispatch] = useReducer(contactReducer, initialContactState);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container className="p-4">
+      <AddContact setIsShow={setIsShow} />
+      <br />
+      <Row>
+        <Col>
+          <ContactTable
+            {...{
+              loading,
+              setLoading,
+              setStatus,
+              setStatusMsg,
+              setToastShow,
+              setIsShow,
+              dispatch,
+            }}
+          />
+        </Col>
+      </Row>
+      <ContactDetailsModal
+        isShow={isShow}
+        setIsShow={setIsShow}
+        customerState={state}
+        dispatch={dispatch}
+        setStatusMsg={setStatusMsg}
+        setStatus={setStatus}
+        setToastShow={setToastShow}
+        setLoading={setLoading}
+        loading={loading}
+      />
+      <ToastInfo {...{ toastShow, setToastShow, statusMsg, status }} />
+    </Container>
   );
 }
 
