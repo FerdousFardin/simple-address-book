@@ -19,13 +19,16 @@ function ContactTable({
   const [filterByNumFound, setFilterByNumFound] = useState(false);
 
   useEffect(() => {
-    getContacts().then((res) => {
-      if (res.data.length > 0) {
-        setContacts(res.data);
+    getContacts()
+      .then((res) => {
+        if (res.data.length > 0) {
+          setContacts(res.data);
+        } else setContacts([]);
+      })
+      .finally(() => {
         setLoading(false);
         setFilterByNumFound(false);
-      }
-    });
+      });
   }, [loading]);
 
   const filterByNumber = (contactNumber) => {
@@ -63,15 +66,22 @@ function ContactTable({
   };
 
   const handleDelete = (id) => {
-    deleteContact(id).then((res) => {
-      if (res.data.deletedCount > 0) {
-        setLoading(true);
+    deleteContact(id)
+      .then((res) => {
+        if (res.data.deletedCount > 0) {
+          setLoading(true);
+          setToastShow(true);
+          setStatus("success");
+          setStatusMsg("Deleted contact");
+          setDeleteShow(false);
+        }
+      })
+      .catch((err) => {
         setToastShow(true);
-        setStatusMsg("Deleted contact");
-        setStatus("success");
+        setStatus("error");
+        setStatusMsg("Can not delete contact. Reason: " + err.message);
         setDeleteShow(false);
-      }
-    });
+      });
   };
 
   const handleDeleteModal = (contact) => {
@@ -204,8 +214,11 @@ function ContactTable({
       />
     </>
   ) : (
-    <div>
-      <h1 className="text-secondary text-center">No Items Found</h1>
+    <div
+      style={{ height: "70vh" }}
+      className="d-flex justify-content-center align-items-center w-full"
+    >
+      <h1 className="text-secondary text-center">No Contacts Found!</h1>
     </div>
   );
 }

@@ -22,17 +22,20 @@ function ContactDetailsModal({
   const contactSubmit = (e) => {
     setLoading(true);
     e.preventDefault();
-    addContacts(customerState).then((res) => {
-      if (res.data.modifiedCount > 0 || res.data.upsertedCount > 0) {
-        setToastShow(true);
-        res.data.upsertedCount > 0 && setStatusMsg("Added new contact");
-        res.data.modifiedCount > 0 && setStatusMsg("Updated a contact");
-        setStatus("success");
+    addContacts(customerState)
+      .then((res) => {
+        if (res.data.modifiedCount > 0 || res.data.upsertedCount > 0) {
+          setToastShow(true);
+          res.data.upsertedCount > 0 && setStatusMsg("Added new contact");
+          res.data.modifiedCount > 0 && setStatusMsg("Updated a contact");
+          setStatus("success");
+          setIsShow(false);
+          dispatch({ type: "RESET" });
+        }
+      })
+      .finally(() => {
         setLoading(false);
-        setIsShow(false);
-        dispatch({ type: "RESET" });
-      }
-    });
+      });
   };
 
   const updateContactState = (e) => {

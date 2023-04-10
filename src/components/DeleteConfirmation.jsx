@@ -18,7 +18,6 @@ function DeleteConfirmation({
       <Modal.Body>
         <div className="alert alert-danger">
           <p className="mb-2"> Are you sure you want to delete this contact:</p>
-          {/* <br /> */}
           Contact Name: {contact ? contact.contactName : ""}
           <br />
           Contact Number: {contact ? contact.contactNumber : ""}
